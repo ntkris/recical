@@ -1,29 +1,20 @@
 from flask import render_template, flash, redirect, url_for, request
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, PurchasesForm
 from flask_login import current_user, login_user
 from flask_login import logout_user
 from flask_login import login_required
 from app import db
-from app.models import User
+from app.models import User, Purchases
 from werkzeug.urls import url_parse
 from app.forms import RegistrationForm
+
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    recipes = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Johns first recipe'
-        },
-        {
-        'author': {'username': 'Susan'},
-        'body': 'Susan first recipe'
-        }
-    ]
-    return render_template('index.html', title = 'Home', recipes = recipes)
+    return render_template('index.html', title = 'Home')
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -60,3 +51,17 @@ def register():
         flash('Congratulations, you are now a Recical user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/purchases', methods = ['GET', 'POST'])
+@login_required
+def purchases():
+    form = PurchasesForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=current_user.username).first()
+        purchases = Purchases(ingredient = form.ingredient.data, ingredient_type = form.ingredient_type.data,
+                              units = form.units.type, quantity = form.quantity.data, user_id = user.id)
+        db.session.add(purchases)
+        db.session.commit()
+        flash('Thank you for recording your purchases!')
+        return redirect(url_for('index'))
+    return render_template('purchases.html', title='Purchases', form=form)

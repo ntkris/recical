@@ -2,7 +2,6 @@
 
 {% block content %}
     <h1>Welcome, {{ current_user.username }}!</h1>
-    {% for recipe in recipes%}
-    <div><p>{{ recipe.author.username }} says: <b>{{ recipe.body}}</b></p></div>
-    {% endfor %}
+    <div><p>Recical lets you record and track your food purchases. <br>
+        We will recommend recipes based on your purchases, and show you of what's left in the fridge! </p></div>
 {% endblock %}

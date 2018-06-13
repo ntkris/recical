@@ -106,3 +106,6 @@ venv.bak/
 # Databases
 *.db
 .db
+
+# Tests
+/tests

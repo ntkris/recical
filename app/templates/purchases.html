@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Purchases</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.ingredient.label }}<br>
+            {{ form.ingredient(size=32) }}<br>
+            {% for error in form.ingredient.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.ingredient_type.label }}<br>
+            {{ form.ingredient_type }}<br>
+        </p>
+        <p>
+            {{ form.quantity.label }}<br>
+            {{ form.quantity(size=32) }}<br>
+            {% for error in form.quantity.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.units.label }}<br>
+            {{ form.units }}<br>
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}
