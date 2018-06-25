@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Welcome, {{ current_user.username }}!</h1>
+{% block app_content %}
+    <h1>Welcome {% if current_user.first_name %} {{ current_user.first_name }} {% endif %}</h1>
     <div><p>Recical lets you record and track your food purchases. <br>
-        We will recommend recipes based on your purchases, and show you of what's left in the fridge! </p></div>
+    </p></div>
 {% endblock %}

@@ -1,13 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, DecimalField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import ValidationError, DataRequired, EqualTo
 from app.models import User
+
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -26,12 +28,14 @@ class RegistrationForm(FlaskForm):
         if email is not None:
             raise ValidationError('Email address taken. Please enter a different email address.')
 
-class PurchasesForm(FlaskForm):
-    ingredient = StringField('Ingredient', validators=[DataRequired()])
-    ingredient_type = SelectField('Ingredient type', choices=[('Protein', 'Protein'), ('Fat', 'Fat'),
-                                                   ('Seasoning', 'Seasoning'), ('Produce', 'Produce')],
-                       validators = [DataRequired()])
-    quantity = DecimalField('Quantity', validators=[DataRequired()])
-    units = SelectField('Units', choices=[('GMS', 'Grams'), ('Units', 'Units')],
-                       validators = [DataRequired()])
-    submit = SubmitField('Submit')
+
+class ResetPasswordRequestForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    submit = SubmitField('Reset Password')
+
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Request Password Reset')
