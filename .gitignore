@@ -110,4 +110,6 @@ venv.bak/
 # Tests
 /tests
 /logs
-/migrations/versions
+
+# Pycharm
+*.pyc

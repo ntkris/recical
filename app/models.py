@@ -56,7 +56,7 @@ class Purchases(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ingredient = db.Column(db.String(140))
     ingredient_type = db.Column(db.String(140))
-    quantity = db.Column(db.Float(140))
+    quantity = db.Column(db.Float())
     units = db.Column(db.String(140))
     expiration_date = db.Column(db.DateTime)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
