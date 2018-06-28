@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DecimalField, SelectField, TextAreaField, DateField
+from wtforms import StringField, SubmitField, DecimalField, SelectField, TextAreaField, SelectMultipleField
+from wtforms.fields.html5 import DateField
 from wtforms.validators import ValidationError, DataRequired, Length
 from app.models import User
+
 
 class PurchasesForm(FlaskForm):
     ingredient = StringField('Ingredient', validators=[DataRequired()])
@@ -11,8 +13,13 @@ class PurchasesForm(FlaskForm):
     quantity = DecimalField('Quantity', validators=[DataRequired()])
     units = SelectField('Units', choices=[('GMS', 'Grams'), ('Units', 'Units')],
                        validators = [DataRequired()])
-    expiration_date = DateField('Expiry date')
+    expiration_date = DateField('Expiry date', format='%Y-%m-%d')
     submit = SubmitField('Submit')
+
+
+class CleanKitchenForm(FlaskForm):
+    ingredients = SelectMultipleField('Ingredients', coerce=int)
+    submit = SubmitField('Bin it!')
 
 
 class EditProfileForm(FlaskForm):

@@ -60,6 +60,8 @@ class Purchases(db.Model):
     units = db.Column(db.String(140))
     expiration_date = db.Column(db.DateTime)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    binned = db.Column(db.Boolean, default = False)
+    binned_timestamp = db.Column(db.DateTime, index=True, default=None)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):

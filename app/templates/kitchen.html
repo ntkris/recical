@@ -1,4 +1,6 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
 
 {% block app_content %}
 
@@ -6,22 +8,34 @@
         <tr valign="top">
             <td>
                 <h1>{% if user.first_name %} {{ user.first_name }}'s {% else %} Your {% endif %} kitchen</h1>
-                <p> This page shows you what's sitting in your kitchen.</p>
+                <p> Check out what's in your kitchen.</p>
 
                 <table class="table table-hover">
                 <tr>
                    <th>Ingredient</th>
                    <th>Quantity</th>
                    <th>Log date</th>
+                   <th>Expiry date</th>
                 <tr/>
                 {% for p in purchases %}
                 <tr>
                     <td>{{ p.ingredient }}</td>
                     <td>{{ p.quantity }}</td>
-                    <td>{{ p.timestamp }}</td>
+                    <td>{{ moment(p.timestamp).format('LL') }}</td>
+                    <td>{{ moment(p.expiration_date).format('LL') }}</td>
                 </tr>
                 {% endfor %}
                 </table>
+
+                {% if purchases %}
+                <h3>Clean up!</h3>
+                <p> Throw away anything that has expired. But remember that we hate it when you waste it!</p>
+                <div class="row">
+                <div class="col-md-4">
+                    {{ wtf.quick_form(form) }}
+                </div>
+                </div>
+                {% endif %}
 
 {% endblock %}
 

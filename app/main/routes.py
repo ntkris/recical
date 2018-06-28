@@ -5,7 +5,7 @@ from flask_login import login_required
 
 
 from app import db
-from app.main.forms import PurchasesForm, EditProfileForm
+from app.main.forms import PurchasesForm, EditProfileForm, CleanKitchenForm
 from app.models import User, Purchases
 from app.main import bp
 
@@ -70,10 +70,21 @@ def edit_profile():
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
 
+
 @bp.route('/kitchen', methods=['GET', 'POST'])
 @login_required
 def kitchen():
     user = User.query.filter_by(username=current_user.username).first()
     user_id = user.id
     purchases = Purchases.query.filter_by(user_id=user_id).all()
-    return render_template('kitchen.html', title ='Kitchen', user=user, purchases=purchases)
+
+    if purchases is not None:
+        form = CleanKitchenForm()
+        form.ingredients.choices = [(g.id, g.ingredient) for g in purchases]
+        if form.validate_on_submit():
+            ''' Need to add here to update entires'''
+            flash('Your items have been binned.')
+        return render_template('kitchen.html', title ='Kitchen', user=user, purchases=purchases, form=form)
+
+    else:
+        return render_template('kitchen.html', title='Kitchen', user=user, purchases=purchases)
