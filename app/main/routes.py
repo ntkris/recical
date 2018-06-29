@@ -5,8 +5,8 @@ from flask_login import login_required
 
 
 from app import db
-from app.main.forms import PurchasesForm, EditProfileForm, CleanKitchenForm
-from app.models import User, Purchases
+from app.main.forms import PurchasesForm, EditProfileForm, CleanKitchenForm, ExercisesForm
+from app.models import User, Purchases, ExerciseLog
 from app.main import bp
 
 
@@ -76,15 +76,30 @@ def edit_profile():
 def kitchen():
     user = User.query.filter_by(username=current_user.username).first()
     user_id = user.id
-    purchases = Purchases.query.filter_by(user_id=user_id).all()
+    purchases = Purchases.query.filter_by(user_id=user_id, binned=False).all()
 
     if purchases is not None:
         form = CleanKitchenForm()
         form.ingredients.choices = [(g.id, g.ingredient) for g in purchases]
         if form.validate_on_submit():
-            ''' Need to add here to update entires'''
+            for i in form.ingredients.data:
+                binned_purchase = Purchases.query.filter_by(id=i).update(dict(binned=True, binned_timestamp = datetime.utcnow()))
+                db.session.commit()
             flash('Your items have been binned.')
         return render_template('kitchen.html', title ='Kitchen', user=user, purchases=purchases, form=form)
 
     else:
         return render_template('kitchen.html', title='Kitchen', user=user, purchases=purchases)
+
+
+@bp.route('/record_workout', methods=['GET', 'POST'])
+@login_required
+def record_workout():
+    form = ExercisesForm()
+    if form.validate_on_submit():
+        ExerciseLog.date = form.date.data
+        ExerciseLog.set_id = form.set_id.data
+        ExerciseLog.reps = form.reps.data
+        ExerciseLog.weight = form.weight.data
+        flash('Your workout has been recorded.')
+    return render_template('record_workout.html', title='Record your workout', user=user, form=form)

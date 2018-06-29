@@ -21,6 +21,7 @@
                 <ul class="nav navbar-nav">
                     {% if current_user.is_anonymous %}
                     {% else %}
+                    <li><a href="{{ url_for('main.record_workout') }}">Record workout</a></li>
                     <li><a href="{{ url_for('main.purchases') }}">Purchases</a></li>
                     <li><a href="{{ url_for('main.kitchen') }}">Kitchen</a></li>
                     {% endif %}

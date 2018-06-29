@@ -68,6 +68,15 @@ class Purchases(db.Model):
         return '<Purchases {}>'.format(self.ingredient)
 
 
+class ExerciseLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    set_id = db.Column(db.Integer)
+    reps = db.Column(db.Integer)
+    weight = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))

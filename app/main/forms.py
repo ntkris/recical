@@ -1,7 +1,8 @@
+from datetime import datetime
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DecimalField, SelectField, TextAreaField, SelectMultipleField
+from wtforms import StringField, SubmitField, DecimalField, SelectField, TextAreaField, SelectMultipleField, IntegerField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import ValidationError, DataRequired, Length
+from wtforms.validators import ValidationError, DataRequired, Length, NumberRange
 from app.models import User
 
 
@@ -18,7 +19,7 @@ class PurchasesForm(FlaskForm):
 
 
 class CleanKitchenForm(FlaskForm):
-    ingredients = SelectMultipleField('Ingredients', coerce=int)
+    ingredients = SelectMultipleField('Ingredients', coerce=int, option_widget=True)
     submit = SubmitField('Bin it!')
 
 
@@ -38,3 +39,12 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+
+class ExercisesForm(FlaskForm):
+    date = DateField('Date', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired()])
+    exercise = SelectField('Exercise', choices = [("d", "deadlift")], option_widget=True, validators=[DataRequired()])
+    set_id = IntegerField('Set number', validators=[DataRequired(), NumberRange(min=1, max=99,message="Please enter a value between %(min)d and %(max)d")])
+    reps = IntegerField('Reps', validators=[DataRequired(), NumberRange(min=1, max=99, message="Please enter a value between %(min)d and %(max)d")])
+    weight = DecimalField('Weight (kgs)', validators=[DataRequired(), NumberRange(min=0.25, max=99,message="Please enter a value between %(min)d and %(max)d")])
+    submit = SubmitField('Submit')
